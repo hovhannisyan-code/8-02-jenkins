@@ -1,0 +1,102 @@
+Started by user admin
+Running as SYSTEM
+Building in workspace /var/lib/jenkins/workspace/8-02-hw
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/8-02-hw/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/hovhannisyan-code/8-2-fork # timeout=10
+Fetching upstream changes from https://github.com/hovhannisyan-code/8-2-fork
+ > git --version # timeout=10
+ > git --version # 'git version 2.34.1'
+ > git fetch --tags --force --progress -- https://github.com/hovhannisyan-code/8-2-fork +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 223dbc3f489784448004e020f2ef224f17a7b06d (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 223dbc3f489784448004e020f2ef224f17a7b06d # timeout=10
+Commit message: "Update README.md"
+ > git rev-list --no-walk 223dbc3f489784448004e020f2ef224f17a7b06d # timeout=10
+[8-02-hw] $ /bin/sh -xe /tmp/jenkins17077319667941542263.sh
++ /usr/local/go/bin/go test .
+ok  	github.com/netology-code/sdvps-materials	(cached)
+[8-02-hw] $ /bin/sh -xe /tmp/jenkins17596964929128731535.sh
++ docker build .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  250.9kB
+Step 1/8 : FROM golang:1.16 AS builder
+1.16: Pulling from library/golang
+e4d61adff207: Pulling fs layer
+4ff1945c672b: Pulling fs layer
+ff5b10aec998: Pulling fs layer
+12de8c754e45: Pulling fs layer
+8c86ff77a317: Pulling fs layer
+0395a1c478ba: Pulling fs layer
+245345d44ed8: Pulling fs layer
+12de8c754e45: Waiting
+8c86ff77a317: Waiting
+0395a1c478ba: Waiting
+245345d44ed8: Waiting
+4ff1945c672b: Verifying Checksum
+4ff1945c672b: Download complete
+ff5b10aec998: Verifying Checksum
+ff5b10aec998: Download complete
+e4d61adff207: Verifying Checksum
+e4d61adff207: Download complete
+12de8c754e45: Verifying Checksum
+12de8c754e45: Download complete
+245345d44ed8: Verifying Checksum
+245345d44ed8: Download complete
+8c86ff77a317: Verifying Checksum
+8c86ff77a317: Download complete
+0395a1c478ba: Verifying Checksum
+0395a1c478ba: Download complete
+e4d61adff207: Pull complete
+4ff1945c672b: Pull complete
+ff5b10aec998: Pull complete
+12de8c754e45: Pull complete
+8c86ff77a317: Pull complete
+0395a1c478ba: Pull complete
+245345d44ed8: Pull complete
+Digest: sha256:5f6a4662de3efc6d6bb812d02e9de3d8698eea16b8eb7281f03e6f3e8383018e
+Status: Downloaded newer image for golang:1.16
+ ---> 972d8c0bc0fc
+Step 2/8 : WORKDIR $GOPATH/src/github.com/netology-code/sdvps-materials
+ ---> Running in fe66f44f2512
+ ---> Removed intermediate container fe66f44f2512
+ ---> 45de7c7265fb
+Step 3/8 : COPY . ./
+ ---> 28ff7d5e6504
+Step 4/8 : RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o /app .
+ ---> Running in a1443974ec33
+ ---> Removed intermediate container a1443974ec33
+ ---> fcea2b4322a5
+Step 5/8 : FROM alpine:latest
+latest: Pulling from library/alpine
+1f3e46996e29: Pulling fs layer
+1f3e46996e29: Verifying Checksum
+1f3e46996e29: Download complete
+1f3e46996e29: Pull complete
+Digest: sha256:56fa17d2a7e7f168a043a2712e63aed1f8543aeafdcee47c58dcffe38ed51099
+Status: Downloaded newer image for alpine:latest
+ ---> b0c9d60fc5e3
+Step 6/8 : RUN apk -U add ca-certificates
+ ---> Running in 849ef72ca408
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86_64/APKINDEX.tar.gz
+(1/1) Installing ca-certificates (20241121-r1)
+Executing busybox-1.37.0-r9.trigger
+Executing ca-certificates-20241121-r1.trigger
+OK: 7 MiB in 16 packages
+ ---> Removed intermediate container 849ef72ca408
+ ---> 70dee8f64cbe
+Step 7/8 : COPY --from=builder /app /app
+ ---> 803b2dbdb5b7
+Step 8/8 : CMD ["/app"]
+ ---> Running in b42c1c542186
+ ---> Removed intermediate container b42c1c542186
+ ---> 37e90bf930c5
+Successfully built 37e90bf930c5
+Finished: SUCCESS

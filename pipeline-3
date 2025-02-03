@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    environment {
+        NEXUS_URL = 'http://192.168.56.10:8081/repository/go-binaries/'
+        NEXUS_USER = 'admin'
+        NEXUS_PASS = 'admin'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hovhannisyan-code/8-2-fork.git'
+            }
+        }
+
+        stage('Build Binary') {
+            steps {
+                sh '/usr/local/go/bin/go env'
+                sh 'CGO_ENABLED=0 GOOS=linux /usr/local/go/bin/go build -a -installsuffix nocgo -o app .'
+            }
+        }
+
+        stage('Archive Binary') {
+            steps {
+                archiveArtifacts artifacts: 'app', fingerprint: true
+            }
+        }
+
+        stage('Upload to Nexus') {
+            steps {
+                script {
+                    def binaryFile = 'app'
+                    
+                    sh """
+                    curl -v -u ${NEXUS_USER}:${NEXUS_PASS} --upload-file ${binaryFile} ${NEXUS_URL}${binaryFile}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and upload successful!'
+        }
+        failure {
+            echo 'Build or upload failed.'
+        }
+    }
+}
